@@ -1,6 +1,6 @@
 package com.iongroup.transactionservice.dao;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.iongroup.accountservice.exception.AccountNotExistException;
@@ -21,5 +21,6 @@ public interface ITransactionDao {
 	
 	public List<Transaction> getLatestTrasactions(Long accountNumber) throws AccountNotExistException;
 	
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, Date fromDate, Date toDate) throws AccountNotExistException;
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException;
+
 }

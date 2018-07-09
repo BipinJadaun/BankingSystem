@@ -7,6 +7,6 @@ public interface ITransactionManagementService {
 	
 	public void deposit(Long accountNumber, double amount) throws AccountNotExistException;
 	public void withdraw(Long accountNumber, double amount) throws AccountNotExistException, InsufficientBalanceException;
-	public void transfer(Long fromAccountNumber, Long toAccountNumber, double amount);
+	public void transfer(Long fromAccountNumber, Long toAccountNumber, double amount) throws AccountNotExistException, InsufficientBalanceException;
 
 }

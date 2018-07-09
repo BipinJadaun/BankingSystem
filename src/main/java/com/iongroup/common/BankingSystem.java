@@ -1,5 +1,6 @@
 package com.iongroup.common;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,9 +28,52 @@ public class BankingSystem {
 		
 		testConcurrentTransections(accountNumber1, accountNumber2, 700, 250, 400);
 		
+		testGetStatement(accountNumber1);
+		
+		testGetStatementByIntarval(accountNumber1, LocalDate.now(), LocalDate.now());
+		
 		testInvalidTransections(accountNumber1, accountNumber2, 1200, 900, 300);
 	}
 
+
+	private void testGetStatementByIntarval(Long accountNumber1, LocalDate fromDate, LocalDate toDate) {
+		System.out.println("*************************************************************");
+		System.out.println("Testing trasaction statement by given intaraval");
+		System.out.println("*************************************************************");
+		
+		List<Transaction> tranxList;
+		try {
+			tranxList = userEndPoint.getTrasactionsByTimeIntarval(accountNumber1, fromDate, toDate);
+			if (tranxList != null && !tranxList.isEmpty()) {
+				System.out.println("Transaction list of account " + accountNumber1);
+				for (Transaction tranx : tranxList) {
+					System.out.println(tranx.getId() + "  " + tranx.getType() + "  " + tranx.getAmount());
+				} 
+			}
+		} catch (AccountNotExistException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	private void testGetStatement(Long accountNumber1) {
+		
+		System.out.println("*************************************************************");
+		System.out.println("Testing last 10 trasaction statement");
+		System.out.println("*************************************************************");
+		
+		List<Transaction> tranxList;
+		try {
+			tranxList = userEndPoint.getLatestTrasactions(accountNumber1);
+			if (tranxList != null && !tranxList.isEmpty()) {
+				System.out.println("Transaction list of account " + accountNumber1);
+				for (Transaction tranx : tranxList) {
+					System.out.println(tranx.getId() + "  " + tranx.getType() + "  " + tranx.getAmount());
+				} 
+			}
+		} catch (AccountNotExistException e) {
+			System.out.println(e.getMessage());
+		}				
+	}
 
 	public Long testAccountService(String user, double initialAmount) {
 		
@@ -105,21 +149,6 @@ public class BankingSystem {
 			System.out.println("current balance of account "+ accountNumber1 +" is "+ userEndPoint.getBalance(accountNumber1));
 			System.out.println("current balance of account "+ accountNumber1 +" is "+ userEndPoint.getBalance(accountNumber2));
 			
-			List<Transaction> tranxList = userEndPoint.getLatestTrasactions(accountNumber1);
-			if (tranxList != null && !tranxList.isEmpty()) {
-				System.out.println("Transaction list of account " + accountNumber1);
-				for (Transaction tranx : tranxList) {
-					System.out.println(tranx.getId() + "  " + tranx.getType() + "  " + tranx.getAmount());
-				} 
-			}
-			
-			List<Transaction> tranxList1 = userEndPoint.getLatestTrasactions(accountNumber2);
-			if (tranxList1 != null && !tranxList1.isEmpty()) {
-				System.out.println("Transaction list of account " + accountNumber2);
-				for (Transaction tranx : tranxList1) {
-					System.out.println(tranx.getId() + "  " + tranx.getType() + "  " + tranx.getAmount());
-				} 
-			}
 		} catch (AccountNotExistException e) {
 			System.out.println(e.getMessage());
 		}		
@@ -148,7 +177,11 @@ public class BankingSystem {
 			System.out.println(e.getMessage());
 		}
 
-		userEndPoint.transfer(accountNumber1, accountNumber2, transferAmount);
+		try {
+			userEndPoint.transfer(accountNumber1, accountNumber2, transferAmount);
+		} catch (AccountNotExistException | InsufficientBalanceException e1) {
+			System.out.println(e1.getMessage());
+		} 
 
 		List<Transaction> tranxList;
 		try {

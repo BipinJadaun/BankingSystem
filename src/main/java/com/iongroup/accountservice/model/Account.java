@@ -1,19 +1,19 @@
 package com.iongroup.accountservice.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Account {
 	
 	private final long accountNo;
 	private String accountHolderName;
 	private double balance;
-	private final Date openingDate;
+	private final LocalDate openingDate;
 	
-	public Account(Long accountNo, String accountHolderName, double balance) {		
+	public Account(Long accountNo, String accountHolderName, double balance, LocalDate openingDate) {		
 		this.accountNo = accountNo;
 		this.accountHolderName = accountHolderName;
 		this.balance = balance;
-		this.openingDate = new Date();
+		this.openingDate = openingDate;
 	}
 
 	public String getAccountHolderName() {
@@ -36,7 +36,7 @@ public class Account {
 		return accountNo;
 	}
 
-	public Date getOpeningDate() {
+	public LocalDate getOpeningDate() {
 		return openingDate;
 	}
 

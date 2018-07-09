@@ -1,5 +1,7 @@
 package com.iongroup.accountservice.endpoint;
 
+import java.time.LocalDate;
+
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.accountservice.model.Account;
@@ -20,7 +22,8 @@ public class AccountServiceEndPoint implements IAccountServiceEndPoint {
 	@Override
 	public Long createAccount(String name, double openingBalance) throws AccountAlreadyExistException {	
 		Long accountId = idGenerator.createID();
-		Account newAccount = new Account(accountId, name, openingBalance);
+		LocalDate openingDate = LocalDate.now();
+		Account newAccount = new Account(accountId, name, openingBalance, openingDate);
 		return accountService.createAccount(newAccount);
 	}
 	

@@ -46,7 +46,7 @@ public class TransactionManagementService implements ITransactionManagementServi
 				if(transValidationService.isValidTransaction(accountNumber, amount)) {
 					transectionDao.withdraw(accountNumber, amount);
 				}else {
-					throw new AccountNotExistException("Account "+accountNumber + " does not have sufficient balance for withdraw amount " +amount);
+					throw new InsufficientBalanceException("Account "+accountNumber + " does not have sufficient balance to withdraw amount " +amount);
 				}
 				System.out.println("Amount: " + amount +" Withdrawn From Account - " + accountNumber);
 			}
@@ -56,29 +56,41 @@ public class TransactionManagementService implements ITransactionManagementServi
 	}
 	
 
-	public void transfer(Long fromAccountNumber, Long toAccountNumber, double amount) {
+	public void transfer(Long fromAccountNumber, Long toAccountNumber, double amount) throws AccountNotExistException, InsufficientBalanceException {
 		
-		if(accValidationService.isValidAccount(fromAccountNumber)){
-			Account account = accountDao.getAccount(fromAccountNumber);
+		validateTransfer(fromAccountNumber, toAccountNumber, amount);
+		Account fromAccount = accountDao.getAccount(fromAccountNumber);
+		Account toAccount = accountDao.getAccount(toAccountNumber);
+		Account account1, account2;
 		
-			synchronized(account) {
-				try {
-					withdraw(fromAccountNumber, amount);
-				} catch (AccountNotExistException | InsufficientBalanceException e) {
-					System.out.println(e.getMessage());
-					return;
-				}
-				try {
-					deposit(toAccountNumber, amount);
-				} catch (AccountNotExistException e) {
-					System.out.println(e.getMessage());
-					try {
-						deposit(fromAccountNumber, amount);
-					} catch (AccountNotExistException e1) {
-						System.out.println("Transection Failed");
-					}
-				}
-			}
+		if(fromAccountNumber < toAccountNumber) {
+			account1 = fromAccount;
+			account2 = toAccount;
+		}else {
+			account1 = toAccount;
+			account2 = fromAccount;
 		}
-	}	
+		
+		synchronized(account1) {
+			synchronized(account2) {
+				transectionDao.withdraw(fromAccountNumber, amount);
+				System.out.println("Amount: " + amount +" Withdrawn From Account - " + fromAccountNumber);
+				
+				transectionDao.deposit(toAccountNumber, amount);
+				System.out.println("Amount: " + amount +" Deposited to Account - " + toAccountNumber);
+			}
+		}		
+	}
+	
+	private void validateTransfer(Long fromAccountNumber, Long toAccountNumber, double amount) throws AccountNotExistException, InsufficientBalanceException  {
+		if(!accValidationService.isValidAccount(fromAccountNumber)){
+			throw new AccountNotExistException("Account "+fromAccountNumber + " does not exist");		
+		}
+		if(!transValidationService.isValidTransaction(fromAccountNumber, amount)) {
+			throw new InsufficientBalanceException("Account "+fromAccountNumber + " does not have sufficient balance to withdraw amount " +amount);
+		}
+		if(!accValidationService.isValidAccount(toAccountNumber)){
+			throw new AccountNotExistException("Account "+toAccountNumber + " does not exist");			
+		}		
+	}
 }

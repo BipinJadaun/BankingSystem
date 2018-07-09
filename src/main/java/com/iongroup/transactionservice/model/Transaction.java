@@ -1,15 +1,15 @@
 package com.iongroup.transactionservice.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public final class Transaction {
+public final class Transaction implements Comparable<Transaction>{
 	
 	private final String id;
 	private final TransactionType type;
 	private final double amount;
-	private final Date transactionDate;
+	private final LocalDate transactionDate;
 
-	public Transaction(String id, TransactionType type, double amount, Date transactionDate) {
+	public Transaction(String id, TransactionType type, double amount, LocalDate transactionDate) {
 		this.id = id;
 		this.type = type;
 		this.amount = amount;
@@ -29,7 +29,7 @@ public final class Transaction {
 		return id;
 	}
 
-	public Date getTransactionDate() {
+	public LocalDate getTransactionDate() {
 		return transactionDate;
 	}
 
@@ -61,5 +61,10 @@ public final class Transaction {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Transaction o) {
+		return this.getTransactionDate().compareTo(o.getTransactionDate());
 	}
 }

@@ -92,7 +92,7 @@ public class TestClass {
 			userEndPoint.transfer(accountNumber1, accountNumber2, 500);
 			System.out.println(userEndPoint.getBalance(accountNumber1));
 			System.out.println(userEndPoint.getBalance(accountNumber2));
-		} catch (AccountNotExistException e) {
+		} catch (AccountNotExistException | InsufficientBalanceException e) {
 			System.out.println(e.getMessage());
 		}		
 	}
