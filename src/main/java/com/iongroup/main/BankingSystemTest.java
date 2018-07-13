@@ -1,4 +1,4 @@
-package com.iongroup.common;
+package com.iongroup.main;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,14 +9,16 @@ import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
 import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
 import com.iongroup.transactionservice.model.Transaction;
+import com.iongroup.userservice.EndUserInterface;
+import com.iongroup.userservice.EndUserServiceManager;
 
 
-public class BankingSystem {
+public class BankingSystemTest {
 	
-	private final UserEndPoint userEndPoint;
+	private final EndUserInterface userService;
 	
-	public BankingSystem() {		
-		userEndPoint = new UserEndPoint();
+	public BankingSystemTest() {		
+		userService = new EndUserServiceManager();
 	}
 	
 	public void test() {
@@ -44,7 +46,7 @@ public class BankingSystem {
 		
 		List<Transaction> tranxList;
 		try {
-			tranxList = userEndPoint.getTrasactionsByTimeIntarval(accountNumber1, fromDate, toDate);
+			tranxList = userService.getTrasactionsByTimeIntarval(accountNumber1, fromDate, toDate);
 			if (tranxList != null && !tranxList.isEmpty()) {
 				System.out.println("Transaction list of account " + accountNumber1);
 				for (Transaction tranx : tranxList) {
@@ -66,7 +68,7 @@ public class BankingSystem {
 		
 		List<Transaction> tranxList;
 		try {
-			tranxList = userEndPoint.getLatestTrasactions(accountNumber1);
+			tranxList = userService.getLatestTrasactions(accountNumber1);
 			if (tranxList != null && !tranxList.isEmpty()) {
 				System.out.println("Transaction list of account " + accountNumber1);
 				for (Transaction tranx : tranxList) {
@@ -83,7 +85,7 @@ public class BankingSystem {
 		Long accountNumber = null;
 		
 		try {
-			accountNumber = userEndPoint.createAccount(user, initialAmount);
+			accountNumber = userService.createAccount(user, initialAmount);
 		} 
 		catch (AccountAlreadyExistException e1) {
 			System.out.println(e1.getMessage());
@@ -98,16 +100,16 @@ public class BankingSystem {
 		System.out.println("*************************************************************");
 		
 		try {
-			userEndPoint.deposit(accountNumber1, depositAmount);
-			System.out.println("current balance of account "+accountNumber1+" is "+ userEndPoint.getBalance(accountNumber1));
+			userService.deposit(accountNumber1, depositAmount);
+			System.out.println("current balance of account "+accountNumber1+" is "+ userService.getBalance(accountNumber1));
 			
-			userEndPoint.withdraw(accountNumber1, withdrawAmount);
-			System.out.println("current balance of account "+accountNumber1+" is "+ userEndPoint.getBalance(accountNumber1));
+			userService.withdraw(accountNumber1, withdrawAmount);
+			System.out.println("current balance of account "+accountNumber1+" is "+ userService.getBalance(accountNumber1));
 
-			userEndPoint.transfer(accountNumber1, accountNumber2, transferAmount);
+			userService.transfer(accountNumber1, accountNumber2, transferAmount);
 			
-			System.out.println("current balance of account "+ accountNumber1 +" is "+ userEndPoint.getBalance(accountNumber1));
-			System.out.println("current balance of account "+ accountNumber2 +" is "+ userEndPoint.getBalance(accountNumber2));
+			System.out.println("current balance of account "+ accountNumber1 +" is "+ userService.getBalance(accountNumber1));
+			System.out.println("current balance of account "+ accountNumber2 +" is "+ userService.getBalance(accountNumber2));
 
 		} catch (AccountNotExistException | InsufficientBalanceException e) {
 			System.out.println(e.getMessage());
@@ -123,21 +125,21 @@ public class BankingSystem {
 		ExecutorService execute = Executors.newFixedThreadPool(3);
 
 		execute.submit(() -> { try {
-			userEndPoint.deposit(accountNumber1, depositAmount);
+			userService.deposit(accountNumber1, depositAmount);
 		} 
 		catch (AccountNotExistException e) {
 			System.out.println(e.getMessage());
 		} });
 
 		execute.submit(() -> { try {
-			userEndPoint.withdraw(accountNumber1, withdrawAmount);
+			userService.withdraw(accountNumber1, withdrawAmount);
 		} 
 		catch (AccountNotExistException | InsufficientBalanceException e) {
 			System.out.println(e.getMessage());
 		} });
 
 		execute.submit(() -> { try {
-			userEndPoint.transfer(accountNumber1, accountNumber2, transferAmount);
+			userService.transfer(accountNumber1, accountNumber2, transferAmount);
 		} 
 		catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -149,8 +151,8 @@ public class BankingSystem {
 		}
 
 		try {
-			System.out.println("current balance of account "+ accountNumber1 +" is "+ userEndPoint.getBalance(accountNumber1));
-			System.out.println("current balance of account "+ accountNumber1 +" is "+ userEndPoint.getBalance(accountNumber2));
+			System.out.println("current balance of account "+ accountNumber1 +" is "+ userService.getBalance(accountNumber1));
+			System.out.println("current balance of account "+ accountNumber1 +" is "+ userService.getBalance(accountNumber2));
 			
 		} catch (AccountNotExistException e) {
 			System.out.println(e.getMessage());
@@ -162,33 +164,33 @@ public class BankingSystem {
 		System.out.println("Testing Invalid Transections ");
 		System.out.println("*************************************************************");
 		try {
-			userEndPoint.closeAccount(accountNumber1);
-			userEndPoint.closeAccount(accountNumber2);
+			userService.closeAccount(accountNumber1);
+			userService.closeAccount(accountNumber2);
 		} catch (AccountNotExistException e1) {
 			System.out.println(e1.getMessage());
 		}		
 
 		try {
-			userEndPoint.deposit(accountNumber1, depositAmount);
+			userService.deposit(accountNumber1, depositAmount);
 		} catch (AccountNotExistException e) {
 			System.out.println(e.getMessage());
 		}
 
 		try {
-			userEndPoint.withdraw(accountNumber1, withdrawAmount);
+			userService.withdraw(accountNumber1, withdrawAmount);
 		} catch (AccountNotExistException | InsufficientBalanceException e) {
 			System.out.println(e.getMessage());
 		}
 
 		try {
-			userEndPoint.transfer(accountNumber1, accountNumber2, transferAmount);
+			userService.transfer(accountNumber1, accountNumber2, transferAmount);
 		} catch (AccountNotExistException | InsufficientBalanceException e1) {
 			System.out.println(e1.getMessage());
 		} 
 
 		List<Transaction> tranxList;
 		try {
-			tranxList = userEndPoint.getLatestTrasactions(accountNumber1);
+			tranxList = userService.getLatestTrasactions(accountNumber1);
 			for(Transaction tranx : tranxList) {
 				System.out.println(tranx.getId() + "  " +tranx.getType() + "  " + tranx.getAmount());
 			}

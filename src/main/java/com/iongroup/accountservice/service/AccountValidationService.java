@@ -1,25 +1,26 @@
 package com.iongroup.accountservice.service;
 
-import com.iongroup.accountservice.dao.AccountDao;
 import com.iongroup.accountservice.dao.IAccountDao;
+import com.iongroup.accountservice.exception.AccountAlreadyExistException;
+import com.iongroup.accountservice.exception.AccountNotExistException;
 
 public class AccountValidationService implements IAccountValidationService {
-	
+
 	private IAccountDao accountDao;	
-	
-	public AccountValidationService() {
-		this.accountDao = new AccountDao();
+
+	public AccountValidationService(IAccountDao accountDao) {
+		this.accountDao = accountDao;
 	}
 
 	@Override
-	public boolean isValidAccount(Long accountNumber) {
-		return isAccountExist(accountNumber);
+	public void validateAccount(Long accountNumber) throws AccountNotExistException {
+		if(accountDao.getAccount(accountNumber) == null)
+			throw new AccountNotExistException("Account "+accountNumber + " does not exist");
 	}
 
-	private boolean isAccountExist(Long accountNumber) {
-		if(accountDao.getAccount(accountNumber) != null) {
-			return true;
-		}
-		return false;
-	}	
+	@Override
+	public void validateCreateAccount(Long accountNumber) throws AccountAlreadyExistException {
+		if(accountDao.getAccount(accountNumber) != null)
+			throw new AccountAlreadyExistException("Account "+accountNumber + " already exist");
+	}
 }

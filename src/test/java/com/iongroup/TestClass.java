@@ -11,20 +11,20 @@ import org.junit.Test;
 
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
-import com.iongroup.common.UserEndPoint;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
 import com.iongroup.transactionservice.model.Transaction;
+import com.iongroup.userservice.EndUserServiceManager;
 
 
 public class TestClass {
 
-	private static UserEndPoint userEndPoint;
+	private static EndUserServiceManager userEndPoint;
 	static Long accountNumber1 = null;
 	static Long accountNumber2 = null;
 
 	@BeforeClass
 	public static void setUp() {
-		userEndPoint = new UserEndPoint();		
+		userEndPoint = new EndUserServiceManager();		
 	}
 
 	@Test

@@ -1,65 +1,61 @@
-package com.iongroup.common;
+package com.iongroup.userservice;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import com.iongroup.accountservice.endpoint.AccountServiceEndPoint;
-import com.iongroup.accountservice.endpoint.IAccountServiceEndPoint;
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
-import com.iongroup.transactionservice.endpoint.ITransactionServiceEndPoint;
-import com.iongroup.transactionservice.endpoint.TransactionSerivceEndPoint;
+import com.iongroup.commonservice.BankingServiceManager;
+import com.iongroup.commonservice.BankingSystemInterface;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
 import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
 import com.iongroup.transactionservice.model.Transaction;
 
-public class UserEndPoint implements IAccountServiceEndPoint, ITransactionServiceEndPoint{
+public class EndUserServiceManager implements EndUserInterface{
 
-	IAccountServiceEndPoint accountService;
-	ITransactionServiceEndPoint transactionService;
+	private final BankingSystemInterface bankingService;
 
-	public UserEndPoint() {
-		this.accountService = new AccountServiceEndPoint();
-		this.transactionService = new TransactionSerivceEndPoint();
+	public EndUserServiceManager() {
+		this.bankingService = new BankingServiceManager();
 	}
 
 	@Override
 	public Long createAccount(String name, double openingBalance) throws AccountAlreadyExistException {
-		return accountService.createAccount(name, openingBalance);
+		return bankingService.createAccount(name, openingBalance);
 	}
 
 	@Override
 	public void closeAccount(Long accountNumber) throws AccountNotExistException {
-		accountService.closeAccount(accountNumber);
+		bankingService.closeAccount(accountNumber);
 	}
 
 	@Override
 	public void deposit(Long accountNumber, double amount) throws AccountNotExistException {
-		transactionService.deposit(accountNumber, amount);		
+		bankingService.deposit(accountNumber, amount);		
 	}
 
 	@Override
 	public void withdraw(Long accountNumber, double amount)	throws AccountNotExistException, InsufficientBalanceException {
-		transactionService.withdraw(accountNumber, amount);		
+		bankingService.withdraw(accountNumber, amount);		
 	}
 
 	@Override
 	public void transfer(Long fromAccountNumber, Long toAccountNumber, double amount) throws AccountNotExistException, InsufficientBalanceException {
-		transactionService.transfer(fromAccountNumber, toAccountNumber, amount);		
+		bankingService.transfer(fromAccountNumber, toAccountNumber, amount);		
 	}
 
 	@Override
 	public double getBalance(Long accountNumber) throws AccountNotExistException {
-		return transactionService.getBalance(accountNumber);	
+		return bankingService.getBalance(accountNumber);	
 	}
 
 	@Override
 	public List<Transaction> getLatestTrasactions(Long accountNumber) throws AccountNotExistException {
-		return transactionService.getLatestTrasactions(accountNumber);
+		return bankingService.getLastTenTrasactions(accountNumber);
 	}
 
 	@Override
 	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidTimeIntarvalException {
-		return transactionService.getTrasactionsByTimeIntarval(accountNumber, fromDate, toDate);
+		return bankingService.getTrasactionsByTimeIntarval(accountNumber, fromDate, toDate);
 	}
 }

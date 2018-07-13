@@ -3,7 +3,9 @@ package com.iongroup.transactionservice.endpoint;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.iongroup.accountservice.dao.IAccountDao;
 import com.iongroup.accountservice.exception.AccountNotExistException;
+import com.iongroup.transactionservice.dao.ITransactionDao;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
 import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
 import com.iongroup.transactionservice.model.Transaction;
@@ -13,14 +15,14 @@ import com.iongroup.transactionservice.service.TransactionManagementService;
 import com.iongroup.transactionservice.service.TransactionRetrievalService;
 
 
-public class TransactionSerivceEndPoint implements ITransactionServiceEndPoint {
+public class TransactionSerivceManager implements TransactionServiceInterface {
 	
 	private final ITransactionManagementService traxManagementService;
 	private final ITransactionRetrievalService traxRetrievalService;
 
-	public TransactionSerivceEndPoint() {
-		this.traxManagementService = new TransactionManagementService();
-		this.traxRetrievalService = new TransactionRetrievalService();
+	public TransactionSerivceManager(IAccountDao accDao, ITransactionDao traxDao) {
+		this.traxManagementService = new TransactionManagementService(accDao, traxDao);
+		this.traxRetrievalService = new TransactionRetrievalService(accDao, traxDao);
 	}
 
 	@Override
@@ -47,8 +49,8 @@ public class TransactionSerivceEndPoint implements ITransactionServiceEndPoint {
 	}
 
 	@Override
-	public List<Transaction> getLatestTrasactions(Long accountNumber) throws AccountNotExistException {
-		return traxRetrievalService.getLatestTrasactions(accountNumber);
+	public List<Transaction> getLastTenTrasactions(Long accountNumber) throws AccountNotExistException {
+		return traxRetrievalService.getLastTenTrasactions(accountNumber);
 	}
 
 	@Override

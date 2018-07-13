@@ -2,7 +2,8 @@ package com.iongroup.accountservice.dao;
 
 
 import com.iongroup.accountservice.model.Account;
-import com.iongroup.commonservice.BankingSystemCache;
+import com.iongroup.dataservice.BankingSystemCache;
+
 
 public class AccountDao implements IAccountDao{
 

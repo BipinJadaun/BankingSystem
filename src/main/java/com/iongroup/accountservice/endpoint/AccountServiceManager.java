@@ -2,21 +2,23 @@ package com.iongroup.accountservice.endpoint;
 
 import java.time.LocalDate;
 
+import com.iongroup.accountservice.dao.IAccountDao;
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.accountservice.model.Account;
 import com.iongroup.accountservice.service.AccountIdGenerator;
 import com.iongroup.accountservice.service.AccountService;
 import com.iongroup.accountservice.service.IAccountService;
+import com.iongroup.transactionservice.dao.ITransactionDao;
 
-public class AccountServiceEndPoint implements IAccountServiceEndPoint {
+public class AccountServiceManager implements AccountServiceInterface {
 	
 	private final IAccountService accountService;
 	private final AccountIdGenerator idGenerator;
 
-	public AccountServiceEndPoint() {
-		this.accountService = new AccountService();
+	public AccountServiceManager(IAccountDao accountDao, ITransactionDao traxDao) {
 		this.idGenerator = new AccountIdGenerator();
+		this.accountService = new AccountService(accountDao, traxDao);
 	}
 	
 	@Override
