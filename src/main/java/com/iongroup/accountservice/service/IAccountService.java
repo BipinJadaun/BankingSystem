@@ -6,7 +6,7 @@ import com.iongroup.accountservice.model.Account;
 
 public interface IAccountService {
 	
-	public Long createAccount(Account acount) throws AccountAlreadyExistException;
+	public Long createAccount(String name, double openingBalance) throws AccountAlreadyExistException;
 	public Account getAccount(Long accountNumber) throws AccountNotExistException;
 	public void closeAccount(Long accountNumber) throws AccountNotExistException;	
 	

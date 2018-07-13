@@ -1,5 +1,7 @@
 package com.iongroup.accountservice.service;
 
+import java.time.LocalDate;
+
 import com.iongroup.accountservice.dao.IAccountDao;
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
@@ -12,23 +14,29 @@ public class AccountService implements IAccountService{
 	private final IAccountDao accountDao; 
 	private final ITransactionDao traxDao;
 	private final IAccountValidationService accValidationService;
+	private final AccountIdGenerator idGenerator;
 
 
 	public AccountService(IAccountDao accountDao, ITransactionDao traxDao) {
 		this.accountDao = accountDao;
 		this.traxDao = traxDao;
 		this.accValidationService = new AccountValidationService(accountDao);
+		this.idGenerator = new AccountIdGenerator();
 	}
 
 	@Override
-	public Long createAccount(Account userAccount) throws AccountAlreadyExistException{
-
-		accValidationService.validateCreateAccount(userAccount.getAccountNo());
-		synchronized(userAccount) {
-			accountDao.createAccount(userAccount);
-			traxDao.addTransection(userAccount.getAccountNo(), TransactionType.DEPOSITE, userAccount.getBalance());
-			System.out.println("Account "+ userAccount.getAccountNo()+" created successfully with initial amount "+userAccount.getBalance());
-			return userAccount.getAccountNo();
+	public Long createAccount(String name, double openingBalance) throws AccountAlreadyExistException{
+		Long accountId = idGenerator.createID();
+		accValidationService.validateCreateAccount(accountId);
+		
+		LocalDate openingDate = LocalDate.now();		
+		Account newAccount = new Account(accountId, name, openingBalance, openingDate);
+		
+		synchronized(newAccount) {
+			accountDao.createAccount(newAccount);
+			traxDao.addTransection(newAccount.getAccountNo(), TransactionType.DEPOSITE, newAccount.getBalance());
+			System.out.println("Account "+ newAccount.getAccountNo()+" created successfully with initial amount "+newAccount.getBalance());
+			return accountId;
 		}		
 	}
 

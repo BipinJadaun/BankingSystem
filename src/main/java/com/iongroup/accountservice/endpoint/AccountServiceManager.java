@@ -14,19 +14,14 @@ import com.iongroup.transactionservice.dao.ITransactionDao;
 public class AccountServiceManager implements AccountServiceInterface {
 	
 	private final IAccountService accountService;
-	private final AccountIdGenerator idGenerator;
 
 	public AccountServiceManager(IAccountDao accountDao, ITransactionDao traxDao) {
-		this.idGenerator = new AccountIdGenerator();
 		this.accountService = new AccountService(accountDao, traxDao);
 	}
 	
 	@Override
 	public Long createAccount(String name, double openingBalance) throws AccountAlreadyExistException {	
-		Long accountId = idGenerator.createID();
-		LocalDate openingDate = LocalDate.now();
-		Account newAccount = new Account(accountId, name, openingBalance, openingDate);
-		return accountService.createAccount(newAccount);
+		return accountService.createAccount(name, openingBalance);
 	}
 	
 	@Override
