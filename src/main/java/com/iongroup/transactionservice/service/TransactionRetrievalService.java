@@ -11,6 +11,7 @@ import com.iongroup.accountservice.service.AccountValidationService;
 import com.iongroup.accountservice.service.IAccountValidationService;
 import com.iongroup.transactionservice.dao.ITransactionDao;
 import com.iongroup.transactionservice.dao.TransactionDao;
+import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
 import com.iongroup.transactionservice.model.Transaction;
 
 public class TransactionRetrievalService implements ITransactionRetrievalService {
@@ -55,8 +56,10 @@ public class TransactionRetrievalService implements ITransactionRetrievalService
 	}
 
 	@Override
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException {
-
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidTimeIntarvalException {
+		if(toDate.isBefore(fromDate)) {
+			throw new InvalidTimeIntarvalException("ToDate must be equal or greater than FromDate");
+		}
 		List<Transaction> trax = null;
 		if (accValidationService.isValidAccount(accountNumber)) {
 			Account account = accountDao.getAccount(accountNumber);			

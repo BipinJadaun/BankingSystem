@@ -10,6 +10,7 @@ import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.transactionservice.endpoint.ITransactionServiceEndPoint;
 import com.iongroup.transactionservice.endpoint.TransactionSerivceEndPoint;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
+import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
 import com.iongroup.transactionservice.model.Transaction;
 
 public class UserEndPoint implements IAccountServiceEndPoint, ITransactionServiceEndPoint{
@@ -58,7 +59,7 @@ public class UserEndPoint implements IAccountServiceEndPoint, ITransactionServic
 	}
 
 	@Override
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException {
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidTimeIntarvalException {
 		return transactionService.getTrasactionsByTimeIntarval(accountNumber, fromDate, toDate);
 	}
 }

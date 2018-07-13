@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
+import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
 import com.iongroup.transactionservice.model.Transaction;
 
 
@@ -49,8 +50,10 @@ public class BankingSystem {
 				for (Transaction tranx : tranxList) {
 					System.out.println(tranx.getId() + "  " + tranx.getType() + "  " + tranx.getAmount());
 				} 
+			}else {
+				System.out.println("No Transaction found for given time interval");
 			}
-		} catch (AccountNotExistException e) {
+		} catch (AccountNotExistException | InvalidTimeIntarvalException e) {
 			System.out.println(e.getMessage());
 		}
 	}

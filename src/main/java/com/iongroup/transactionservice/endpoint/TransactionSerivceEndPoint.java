@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
+import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
 import com.iongroup.transactionservice.model.Transaction;
 import com.iongroup.transactionservice.service.ITransactionManagementService;
 import com.iongroup.transactionservice.service.ITransactionRetrievalService;
@@ -51,7 +52,7 @@ public class TransactionSerivceEndPoint implements ITransactionServiceEndPoint {
 	}
 
 	@Override
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate)throws AccountNotExistException {
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate)throws AccountNotExistException, InvalidTimeIntarvalException {
 		return traxRetrievalService.getTrasactionsByTimeIntarval(accountNumber, fromDate, toDate);
 	}	
 

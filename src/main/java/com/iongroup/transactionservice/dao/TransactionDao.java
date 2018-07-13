@@ -3,7 +3,6 @@ package com.iongroup.transactionservice.dao;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.accountservice.model.Account;
@@ -91,10 +90,70 @@ public class TransactionDao implements ITransactionDao{
 		List<Transaction> traxList = cache.getTransactions(accountNumber);
 		List<Transaction> list = null ;
 		
-		list = traxList.stream().filter(t ->  ((t.getTransactionDate().isEqual(fromDate) ||(t.getTransactionDate().isAfter(fromDate))) &&
+		int startIdx = searchTransactionIndexForDate(traxList, fromDate, "START_DATE");
+		int endIdx = searchTransactionIndexForDate(traxList, toDate, "END_DATE");
+		
+		if(startIdx == -1) {
+			System.out.println("Invalid From Date");
+			return null;
+		}
+		if(endIdx == -1) {
+			System.out.println("Invalid To Date");
+			return null;
+		}
+		
+		list = traxList.subList(startIdx, endIdx+1);
+		
+		/*list = traxList.stream().filter(t ->  ((t.getTransactionDate().isEqual(fromDate) ||(t.getTransactionDate().isAfter(fromDate))) &&
 				 (t.getTransactionDate().isEqual(toDate) || t.getTransactionDate().isBefore(toDate))))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList());*/
 		
 		return list;
 	}
+	
+	private int searchTransactionIndexForDate(List<Transaction> list, LocalDate date, String dateType) {
+        Transaction first = list.get(0);
+        Transaction last = list.get(list.size()-1);
+        int idx = -1;
+        
+        if(date.isBefore(first.getTransactionDate()))
+        	return 0;
+        
+        if(date.isAfter(last.getTransactionDate()))
+        	return -1;       
+
+        int low = 0;
+        int high = list.size() - 1;
+
+        while (low <= high) {
+            int mid = (high + low) / 2;
+            Transaction midTrax = list.get(mid);
+            
+            if(date.isEqual(midTrax.getTransactionDate())) {
+            	idx = mid;
+            	if(dateType.equals("START_DATE"))
+            		high = mid-1;
+            	else if(dateType.endsWith("END_DATE"))
+            		low = mid+1;
+            }
+            else if(date.isBefore(midTrax.getTransactionDate())) {
+            	high = mid-1;
+            }
+            else{
+            	low = mid + 1;
+            }
+        }
+        
+        if(idx != -1) {
+        	return idx;
+        }
+        
+        if(dateType.equals("START_DATE")) {
+        	idx = low;
+        }else if(dateType.equals("END_DATE")) {
+        	idx = high;
+        }
+        
+        return idx;
+    }
 }
