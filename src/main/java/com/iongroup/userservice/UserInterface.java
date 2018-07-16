@@ -6,10 +6,10 @@ import java.util.List;
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
-import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
+import com.iongroup.transactionservice.exception.InvalidDateException;
 import com.iongroup.transactionservice.model.Transaction;
 
-public interface EndUserInterface{
+public interface UserInterface{
 	
 	public Long createAccount(String name, double openingBalance) throws AccountAlreadyExistException ;
 	
@@ -25,7 +25,7 @@ public interface EndUserInterface{
 	
 	public List<Transaction> getLatestTrasactions(Long accountNumber) throws AccountNotExistException;
 	
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidTimeIntarvalException;
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidDateException;
 
 
 }

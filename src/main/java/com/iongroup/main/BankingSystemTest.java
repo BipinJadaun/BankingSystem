@@ -7,18 +7,18 @@ import java.util.concurrent.Executors;
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
-import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
+import com.iongroup.transactionservice.exception.InvalidDateException;
 import com.iongroup.transactionservice.model.Transaction;
-import com.iongroup.userservice.EndUserInterface;
-import com.iongroup.userservice.EndUserServiceManager;
+import com.iongroup.userservice.UserInterface;
+import com.iongroup.userservice.UserServiceManager;
 
 
 public class BankingSystemTest {
 	
-	private final EndUserInterface userService;
+	private final UserInterface userService;
 	
 	public BankingSystemTest() {		
-		userService = new EndUserServiceManager();
+		userService = new UserServiceManager();
 	}
 	
 	public void test() {
@@ -55,7 +55,7 @@ public class BankingSystemTest {
 			}else {
 				System.out.println("No Transaction found for given time interval");
 			}
-		} catch (AccountNotExistException | InvalidTimeIntarvalException e) {
+		} catch (AccountNotExistException | InvalidDateException e) {
 			System.out.println(e.getMessage());
 		}
 	}

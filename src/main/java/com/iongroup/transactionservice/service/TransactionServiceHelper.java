@@ -35,7 +35,6 @@ public class TransactionServiceHelper {
 		if(idx != -1) {
 			return idx;
 		}
-
 		if(dateType.equals("START_DATE")) {
 			idx = low;								//to return next transaction's index if there is no transaction on given fromDate
 		}else if(dateType.equals("END_DATE")) {

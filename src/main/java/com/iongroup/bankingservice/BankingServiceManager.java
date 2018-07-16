@@ -1,4 +1,4 @@
-package com.iongroup.commonservice;
+package com.iongroup.bankingservice;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +16,7 @@ import com.iongroup.transactionservice.dao.ITransactionDao;
 import com.iongroup.transactionservice.dao.TransactionDao;
 import com.iongroup.transactionservice.endpoint.TransactionSerivceManager;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
-import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
+import com.iongroup.transactionservice.exception.InvalidDateException;
 import com.iongroup.transactionservice.model.Transaction;
 
 public class BankingServiceManager implements BankingSystemInterface{
@@ -70,7 +70,7 @@ public class BankingServiceManager implements BankingSystemInterface{
 	}
 
 	@Override
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidTimeIntarvalException {
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidDateException {
 		return transactionService.getTrasactionsByTimeIntarval(accountNumber, fromDate, toDate);
 	}
 

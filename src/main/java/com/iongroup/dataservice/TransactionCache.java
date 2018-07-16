@@ -8,7 +8,11 @@ import com.iongroup.transactionservice.model.Transaction;
 
 public class TransactionCache {
 	
-	private Map<Long, List<Transaction>> transactions = new ConcurrentHashMap<>();
+	private Map<Long, List<Transaction>> transactions ;
+
+	public TransactionCache() {
+		this.transactions = new ConcurrentHashMap<>();
+	}
 
 	public void deleteTransactions(Long accountNumber) {
 		transactions.remove(accountNumber);		

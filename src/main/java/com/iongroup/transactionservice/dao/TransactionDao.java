@@ -76,7 +76,7 @@ public class TransactionDao implements ITransactionDao{
 	}	
 
 	@Override
-	public List<Transaction> getLatestTrasactions(Long accountNumber){
+	public List<Transaction> getLastTenTrasactions(Long accountNumber){
 		int count = 0;
 		List<Transaction> list = new LinkedList<>();
 		List<Transaction> TranxList = systemCache.getTransactions(accountNumber);

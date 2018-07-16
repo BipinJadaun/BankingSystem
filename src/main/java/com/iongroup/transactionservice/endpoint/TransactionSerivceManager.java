@@ -7,7 +7,7 @@ import com.iongroup.accountservice.dao.IAccountDao;
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.transactionservice.dao.ITransactionDao;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
-import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
+import com.iongroup.transactionservice.exception.InvalidDateException;
 import com.iongroup.transactionservice.model.Transaction;
 import com.iongroup.transactionservice.service.ITransactionManagementService;
 import com.iongroup.transactionservice.service.ITransactionRetrievalService;
@@ -54,7 +54,7 @@ public class TransactionSerivceManager implements TransactionServiceInterface {
 	}
 
 	@Override
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate)throws AccountNotExistException, InvalidTimeIntarvalException {
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate)throws AccountNotExistException, InvalidDateException {
 		return traxRetrievalService.getTrasactionsByTimeIntarval(accountNumber, fromDate, toDate);
 	}	
 

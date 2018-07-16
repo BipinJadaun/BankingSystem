@@ -13,18 +13,19 @@ import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
 import com.iongroup.transactionservice.model.Transaction;
-import com.iongroup.userservice.EndUserServiceManager;
+import com.iongroup.userservice.UserInterface;
+import com.iongroup.userservice.UserServiceManager;
 
 
 public class TestClass {
 
-	private static EndUserServiceManager userEndPoint;
+	private static UserInterface userEndPoint;
 	static Long accountNumber1 = null;
 	static Long accountNumber2 = null;
 
 	@BeforeClass
 	public static void setUp() {
-		userEndPoint = new EndUserServiceManager();		
+		userEndPoint = new UserServiceManager();		
 	}
 
 	@Test

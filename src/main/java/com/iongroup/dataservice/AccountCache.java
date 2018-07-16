@@ -6,7 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.iongroup.accountservice.model.Account;
 
 public class AccountCache {
-	private Map<Long, Account> users = new ConcurrentHashMap<>();
+	private Map<Long, Account> users;
+
+	public AccountCache() {
+		this.users = new ConcurrentHashMap<>();
+	}
 
 	public void AddAccount(long accountNo, Account user) {
 		users.put(accountNo, user);		

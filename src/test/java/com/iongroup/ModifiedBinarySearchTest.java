@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ABC {
+public class ModifiedBinarySearchTest {
 
 	public static void main(String[] args) {
 		List<Transaction> list = new LinkedList<>();
@@ -31,8 +31,8 @@ public class ABC {
 		//LocalDate startDate = LocalDate.now();
 		//LocalDate endDate = LocalDate.now();
 
-		LocalDate startDate = LocalDate.of(2018, Month.JULY, 12);
-		LocalDate endDate = LocalDate.of(2018, Month.AUGUST, 12);
+		LocalDate startDate = LocalDate.of(2018, Month.JUNE, 12);
+		LocalDate endDate = LocalDate.of(2018, Month.JULY, 12);
 
 		if(!endDate.isBefore(startDate)) {
 
@@ -58,16 +58,8 @@ public class ABC {
 	}
 
 	public static int search(List<Transaction> list, LocalDate date, String dateType) {
-		Transaction first = list.get(0);
-		Transaction last = list.get(list.size()-1);
+		
 		int idx = -1;
-
-		if(date.isBefore(first.getTransactionDate()))
-			return 0;
-
-		if(date.isAfter(last.getTransactionDate()))
-			return -1;       
-
 		int low = 0;
 		int high = list.size() - 1;
 
@@ -91,7 +83,7 @@ public class ABC {
 		}
 
 		if(idx != -1) {
-			return idx;
+			return idx; 
 		}
 
 		if(dateType.equals("START_DATE"))

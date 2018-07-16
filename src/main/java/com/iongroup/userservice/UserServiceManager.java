@@ -5,17 +5,17 @@ import java.util.List;
 
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
-import com.iongroup.commonservice.BankingServiceManager;
-import com.iongroup.commonservice.BankingSystemInterface;
+import com.iongroup.bankingservice.BankingServiceManager;
+import com.iongroup.bankingservice.BankingSystemInterface;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
-import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
+import com.iongroup.transactionservice.exception.InvalidDateException;
 import com.iongroup.transactionservice.model.Transaction;
 
-public class EndUserServiceManager implements EndUserInterface{
+public class UserServiceManager implements UserInterface{
 
 	private final BankingSystemInterface bankingService;
 
-	public EndUserServiceManager() {
+	public UserServiceManager() {
 		this.bankingService = new BankingServiceManager();
 	}
 
@@ -55,7 +55,7 @@ public class EndUserServiceManager implements EndUserInterface{
 	}
 
 	@Override
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidTimeIntarvalException {
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidDateException {
 		return bankingService.getTrasactionsByTimeIntarval(accountNumber, fromDate, toDate);
 	}
 }

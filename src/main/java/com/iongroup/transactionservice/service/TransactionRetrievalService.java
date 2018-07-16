@@ -9,7 +9,7 @@ import com.iongroup.accountservice.model.Account;
 import com.iongroup.accountservice.service.AccountValidationService;
 import com.iongroup.accountservice.service.IAccountValidationService;
 import com.iongroup.transactionservice.dao.ITransactionDao;
-import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
+import com.iongroup.transactionservice.exception.InvalidDateException;
 import com.iongroup.transactionservice.model.Transaction;
 
 public class TransactionRetrievalService implements ITransactionRetrievalService {
@@ -51,7 +51,7 @@ public class TransactionRetrievalService implements ITransactionRetrievalService
 		
 		account.getLock().lock();
 		try {
-			trax = transectionDao.getLatestTrasactions(accountNumber);
+			trax = transectionDao.getLastTenTrasactions(accountNumber);
 		}finally {
 			account.getLock().unlock();
 		}
@@ -59,7 +59,7 @@ public class TransactionRetrievalService implements ITransactionRetrievalService
 	}
 
 	@Override
-	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidTimeIntarvalException {
+	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException, InvalidDateException {
 
 		traxValidationService.validateTimeIntarval(fromDate, toDate);
 		accValidationService.validateAccount(accountNumber);

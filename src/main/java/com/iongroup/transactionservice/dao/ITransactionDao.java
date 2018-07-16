@@ -19,7 +19,7 @@ public interface ITransactionDao {
 
 	public void removeTransactions(Long accountNumber);
 	
-	public List<Transaction> getLatestTrasactions(Long accountNumber) throws AccountNotExistException;
+	public List<Transaction> getLastTenTrasactions(Long accountNumber) throws AccountNotExistException;
 	
 	public List<Transaction> getTrasactionsByTimeIntarval(Long accountNumber, LocalDate fromDate, LocalDate toDate) throws AccountNotExistException;
 

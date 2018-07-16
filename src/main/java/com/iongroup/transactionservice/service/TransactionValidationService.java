@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import com.iongroup.accountservice.dao.IAccountDao;
 import com.iongroup.accountservice.model.Account;
 import com.iongroup.transactionservice.exception.InsufficientBalanceException;
-import com.iongroup.transactionservice.exception.InvalidTimeIntarvalException;
+import com.iongroup.transactionservice.exception.InvalidDateException;
 
 public class TransactionValidationService implements ITransactionValidationService{
 
@@ -24,11 +24,11 @@ public class TransactionValidationService implements ITransactionValidationServi
 	}
 
 	@Override
-	public void validateTimeIntarval(LocalDate fromDate, LocalDate toDate) throws InvalidTimeIntarvalException {
+	public void validateTimeIntarval(LocalDate fromDate, LocalDate toDate) throws InvalidDateException {
 		if(toDate.isBefore(fromDate))
-			throw new InvalidTimeIntarvalException("ToDate must be equal or greater than FromDate");
+			throw new InvalidDateException("ToDate "+ toDate +" must be equal or greater than FromDate "+ fromDate);
 		if(toDate.isAfter(LocalDate.now()))
-			throw new InvalidTimeIntarvalException("ToDate must be equal or less than Today");
+			throw new InvalidDateException("ToDate "+ toDate +" must be equal or less than Today " + LocalDate.now());
 	}
 	
 	
