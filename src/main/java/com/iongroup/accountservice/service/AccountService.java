@@ -32,12 +32,15 @@ public class AccountService implements IAccountService{
 		LocalDate openingDate = LocalDate.now();		
 		Account newAccount = new Account(accountId, name, openingBalance, openingDate);
 		
-		synchronized(newAccount) {
+		newAccount.getLock().lock();
+		try {
 			accountDao.createAccount(newAccount);
 			traxDao.addTransection(newAccount.getAccountNo(), TransactionType.DEPOSITE, newAccount.getBalance());
 			System.out.println("Account "+ newAccount.getAccountNo()+" created successfully with initial amount "+newAccount.getBalance());
 			return accountId;
-		}		
+		}finally {
+			newAccount.getLock().unlock();
+		}
 	}
 
 	@Override
@@ -45,10 +48,14 @@ public class AccountService implements IAccountService{
 
 		accValidationService.validateAccount(accountNumber);
 		Account userAccount = accountDao.getAccount(accountNumber);
-		synchronized(userAccount) {
+		
+		userAccount.getLock().lock();
+		try {
 			accountDao.closeAccount(accountNumber);
 			traxDao.removeTransactions(accountNumber);
 			System.out.println("Account " + accountNumber + " closed successfully");
+		}finally {
+			userAccount.getLock().unlock();
 		}
 	}
 

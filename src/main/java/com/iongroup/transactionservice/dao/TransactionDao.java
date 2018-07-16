@@ -1,12 +1,12 @@
 package com.iongroup.transactionservice.dao;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.iongroup.accountservice.exception.AccountNotExistException;
 import com.iongroup.accountservice.model.Account;
-import com.iongroup.dataservice.BankingSystemCache;
 import com.iongroup.dataservice.IBankingSystemCache;
 import com.iongroup.transactionservice.model.Transaction;
 import com.iongroup.transactionservice.model.TransactionType;
@@ -20,9 +20,9 @@ public class TransactionDao implements ITransactionDao{
 	private final TransactionServiceHelper helper;
 
 
-	public TransactionDao() {
+	public TransactionDao(IBankingSystemCache systemCache) {
+		this.systemCache = systemCache;
 		this.idGenerator = new TransactionIdGenerator();
-		this.systemCache = new BankingSystemCache();
 		this.helper = new TransactionServiceHelper();
 	}
 
@@ -104,13 +104,10 @@ public class TransactionDao implements ITransactionDao{
 		if(endIdx == -1) {
 			System.out.println("Invalid To Date");
 			return null;
-		}
-		
+		}		
 		list = traxList.subList(startIdx, endIdx+1);
 		
-		/*list = traxList.stream().filter(t ->  ((t.getTransactionDate().isEqual(fromDate) ||(t.getTransactionDate().isAfter(fromDate))) &&
-				 (t.getTransactionDate().isEqual(toDate) || t.getTransactionDate().isBefore(toDate))))
-				.collect(Collectors.toList());*/
+		Collections.reverse(list);
 		
 		return list;
 	}

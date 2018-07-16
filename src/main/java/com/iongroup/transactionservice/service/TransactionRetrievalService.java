@@ -32,8 +32,12 @@ public class TransactionRetrievalService implements ITransactionRetrievalService
 		double balance = 0;
 		accValidationService.validateAccount(accountNumber);
 		Account account = accountDao.getAccount(accountNumber);
-		synchronized (account) {
+		
+		account.getLock().lock();
+		try {
 			balance = transectionDao.getBalance(accountNumber);
+		}finally {
+			account.getLock().unlock();
 		}
 		return balance;
 	}
@@ -45,8 +49,11 @@ public class TransactionRetrievalService implements ITransactionRetrievalService
 		List<Transaction> trax = null;
 		Account account = accountDao.getAccount(accountNumber);
 		
-		synchronized (account) {
+		account.getLock().lock();
+		try {
 			trax = transectionDao.getLatestTrasactions(accountNumber);
+		}finally {
+			account.getLock().unlock();
 		}
 		return trax;
 	}
@@ -60,8 +67,11 @@ public class TransactionRetrievalService implements ITransactionRetrievalService
 		List<Transaction> trax = null;
 		Account account = accountDao.getAccount(accountNumber);
 		
-		synchronized (account) {
+		account.getLock().lock();
+		try {
 			trax = transectionDao.getTrasactionsByTimeIntarval(accountNumber, fromDate, toDate);
+		}finally {
+			account.getLock().unlock();
 		}
 		return trax;
 	}

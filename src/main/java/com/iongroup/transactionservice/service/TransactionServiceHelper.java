@@ -8,16 +8,8 @@ import com.iongroup.transactionservice.model.Transaction;
 public class TransactionServiceHelper {
 
 	public int searchTransactionIndexForDate(List<Transaction> list, LocalDate date, String dateType) {
-		Transaction first = list.get(0);
-		Transaction last = list.get(list.size()-1);
+
 		int idx = -1;
-
-		if(date.isBefore(first.getTransactionDate()))
-			return 0;
-
-		if(date.isAfter(last.getTransactionDate()))
-			return -1;       
-
 		int low = 0;
 		int high = list.size() - 1;
 
@@ -28,9 +20,9 @@ public class TransactionServiceHelper {
 			if(date.isEqual(midTrax.getTransactionDate())) {
 				idx = mid;
 				if(dateType.equals("START_DATE"))
-					high = mid-1;
+					high = mid-1; 						//to find first occurrence in case of duplicates (multiple transaction on same date)
 				else if(dateType.endsWith("END_DATE"))
-					low = mid+1;
+					low = mid+1;						//to find last occurrence in case of duplicates (multiple transaction on same date)
 			}
 			else if(date.isBefore(midTrax.getTransactionDate())) {
 				high = mid-1;
@@ -45,9 +37,9 @@ public class TransactionServiceHelper {
 		}
 
 		if(dateType.equals("START_DATE")) {
-			idx = low;
+			idx = low;								//to return next transaction's index if there is no transaction on given fromDate
 		}else if(dateType.equals("END_DATE")) {
-			idx = high;
+			idx = high;								//to return previous transaction's index if there is no transaction on given toDate
 		}
 		return idx;
 	}

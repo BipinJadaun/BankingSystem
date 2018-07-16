@@ -9,6 +9,8 @@ import com.iongroup.accountservice.endpoint.AccountServiceInterface;
 import com.iongroup.accountservice.endpoint.AccountServiceManager;
 import com.iongroup.accountservice.exception.AccountAlreadyExistException;
 import com.iongroup.accountservice.exception.AccountNotExistException;
+import com.iongroup.dataservice.BankingSystemCache;
+import com.iongroup.dataservice.IBankingSystemCache;
 import com.iongroup.transactionservice.endpoint.TransactionServiceInterface;
 import com.iongroup.transactionservice.dao.ITransactionDao;
 import com.iongroup.transactionservice.dao.TransactionDao;
@@ -25,8 +27,9 @@ public class BankingServiceManager implements BankingSystemInterface{
 	private final ITransactionDao traxDao;
 	
 	public BankingServiceManager() {
-		this.accDao = new AccountDao();
-		this.traxDao = new TransactionDao();
+		IBankingSystemCache systemCache = new BankingSystemCache();
+		this.accDao = new AccountDao(systemCache);
+		this.traxDao = new TransactionDao(systemCache);
 		this.accountService = new AccountServiceManager(accDao, traxDao);
 		this.transactionService = new TransactionSerivceManager(accDao, traxDao);
 	}
@@ -58,8 +61,7 @@ public class BankingServiceManager implements BankingSystemInterface{
 
 	@Override
 	public double getBalance(Long accountNumber) throws AccountNotExistException {
-		// TODO Auto-generated method stub
-		return 0;
+		return transactionService.getBalance(accountNumber);
 	}
 
 	@Override

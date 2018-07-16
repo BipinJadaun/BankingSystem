@@ -2,15 +2,15 @@ package com.iongroup.accountservice.dao;
 
 
 import com.iongroup.accountservice.model.Account;
-import com.iongroup.dataservice.BankingSystemCache;
+import com.iongroup.dataservice.IBankingSystemCache;
 
 
 public class AccountDao implements IAccountDao{
 
-	private final BankingSystemCache cache;
+	private final IBankingSystemCache cache;
 
-	public AccountDao() {
-		this.cache = new BankingSystemCache();
+	public AccountDao(IBankingSystemCache cache) {
+		this.cache = cache;
 	}
 
 	@Override

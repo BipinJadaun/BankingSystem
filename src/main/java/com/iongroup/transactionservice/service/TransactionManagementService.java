@@ -25,24 +25,30 @@ public class TransactionManagementService implements ITransactionManagementServi
 
 	public void deposit(Long accountNumber, double amount) throws AccountNotExistException{
 
-		accValidationService.validateAccount(accountNumber);
-		
+		accValidationService.validateAccount(accountNumber);		
 		Account account = accountDao.getAccount(accountNumber);
-		synchronized(account) {
+		
+		account.getLock().lock();
+		try {
 			transectionDao.deposit(accountNumber, amount);
 			System.out.println("Amount: " + amount +" Deposited to Account - " + accountNumber);
-		}			
+		}finally {
+			account.getLock().unlock();
+		}
 	}
 
 	public void withdraw(Long accountNumber, double amount) throws AccountNotExistException, InsufficientBalanceException{
 
 		accValidationService.validateAccount(accountNumber);
-
 		Account account = accountDao.getAccount(accountNumber);
-		synchronized(account) {
+		
+		account.getLock().lock();
+		try{
 			transValidationService.validateTransaction(accountNumber, amount);
 			transectionDao.withdraw(accountNumber, amount);
 			System.out.println("Amount: " + amount +" Withdrawn From Account - " + accountNumber);
+		}finally {
+			account.getLock().unlock();
 		}
 	}
 
@@ -53,25 +59,33 @@ public class TransactionManagementService implements ITransactionManagementServi
 		
 		Account fromAccount = accountDao.getAccount(fromAccountNumber);
 		Account toAccount = accountDao.getAccount(toAccountNumber);
-		Account account1, account2;
+		
+		while(true) {
+			if(fromAccount.getLock().tryLock()) {
+				try {
+					if(toAccount.getLock().tryLock()) {
+						try {
+							transectionDao.withdraw(fromAccountNumber, amount);
+							System.out.println("Amount: " + amount +" Withdrawn From Account - " + fromAccountNumber);
 
-		if(fromAccountNumber < toAccountNumber) {
-			account1 = fromAccount;
-			account2 = toAccount;
-		}else {
-			account1 = toAccount;
-			account2 = fromAccount;
-		}
-
-		synchronized(account1) {
-			synchronized(account2) {
-				transectionDao.withdraw(fromAccountNumber, amount);
-				System.out.println("Amount: " + amount +" Withdrawn From Account - " + fromAccountNumber);
-
-				transectionDao.deposit(toAccountNumber, amount);
-				System.out.println("Amount: " + amount +" Deposited to Account - " + toAccountNumber);
+							transectionDao.deposit(toAccountNumber, amount);
+							System.out.println("Amount: " + amount +" Deposited to Account - " + toAccountNumber);
+							
+							break;
+						}finally {
+							toAccount.getLock().unlock();
+						}
+					}
+				}finally {
+					fromAccount.getLock().unlock();
+				}
 			}
-		}		
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				System.out.println(e.getMessage());
+			}
+		}			
 	}
 
 	private void validateTransfer(Long fromAccountNumber, Long toAccountNumber, double amount) throws AccountNotExistException, InsufficientBalanceException  {

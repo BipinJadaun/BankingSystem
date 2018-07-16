@@ -1,6 +1,8 @@
 package com.iongroup.accountservice.model;
 
 import java.time.LocalDate;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Account {
 	
@@ -8,12 +10,14 @@ public class Account {
 	private String accountHolderName;
 	private double balance;
 	private final LocalDate openingDate;
+	private final Lock lock;
 	
 	public Account(Long accountNo, String accountHolderName, double balance, LocalDate openingDate) {		
 		this.accountNo = accountNo;
 		this.accountHolderName = accountHolderName;
 		this.balance = balance;
 		this.openingDate = openingDate;
+		this.lock = new ReentrantLock();
 	}
 
 	public String getAccountHolderName() {
@@ -38,6 +42,10 @@ public class Account {
 
 	public LocalDate getOpeningDate() {
 		return openingDate;
+	}
+
+	public Lock getLock() {
+		return lock;
 	}
 
 	@Override
